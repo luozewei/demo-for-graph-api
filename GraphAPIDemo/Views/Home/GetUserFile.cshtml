@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "GetUserList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>GetUserList</h2>
+
+<table class="table table-striped table-bordered table-hover table-condensed">
+    @foreach (var user in ViewBag.Files)
+    {
+      <tr><td>@user.Name</td><td>@user.Id</td></tr>
+    }
+</table>
