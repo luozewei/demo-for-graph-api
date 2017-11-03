@@ -7,4 +7,4 @@
 通过Graph APi 获取邮件列表<br>
 通过Graph APi 发送带附件邮件<br>
 通过Graph APi 列出OD上的列出最近使用的文档<br>
-如果有神么其他问题请联系我<br>
+如果有疑问或问题请联系我<br>
