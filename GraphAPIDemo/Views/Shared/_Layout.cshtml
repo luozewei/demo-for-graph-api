@@ -22,8 +22,8 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("主页", "Index", "Home")</li>
-                    <li>@Html.ActionLink("注销", "SignOut", "Account")</li>
-                    <li>@System.Security.Claims.ClaimsPrincipal.Current.Identity.Name</li>
+                    @*<li>@Html.ActionLink("注销", "SignOut", "Account")</li>*@
+                    <li style="color:bisque">@Html.ActionLink(@System.Security.Claims.ClaimsPrincipal.Current.Identity.Name+",注销", "SignOut", "Account") </li>
                 </ul>
             </div>
         </div>
