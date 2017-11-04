@@ -22,7 +22,7 @@ namespace GraphAPIDemo.App_Start
         {
           
           
-            //如果存在身份信息
+            //如果不存在身份信息
             if (!HttpContext.Current.User.Identity.IsAuthenticated)
             { 
                  var request = filterContext.RequestContext.HttpContext.Request;

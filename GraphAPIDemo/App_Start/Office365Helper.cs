@@ -75,7 +75,7 @@ namespace GraphAPIDemo.App_Start
                    Notifications = new OpenIdConnectAuthenticationNotifications
                    {   
                        AuthenticationFailed = (AuthenticationFailedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> context) => {
-                           //log.Error("认证报错:" + context.Exception.Message, context.Exception);
+                      
                            context.HandleResponse();
                            context.Response.Redirect("/?errormessage=" + context.Exception.Message);
                            return Task.FromResult(0);
@@ -92,7 +92,7 @@ namespace GraphAPIDemo.App_Start
                            AuthenticationContext authContext = new AuthenticationContext(string.Format(Config.O365AuthorityNoCommon, tenantID), tokenCache); 
                            Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationResult result = await authContext.AcquireTokenByAuthorizationCodeAsync(
                                code, new Uri(Config.O365RedirectUri), credential,Config.GraphResourceId);
-                          // log.Info("认证成功:"+ signedInUserID);
+                        
                        }
                    }
                   
@@ -162,7 +162,7 @@ namespace GraphAPIDemo.App_Start
             string signedInUserID = ClaimsPrincipal.Current.FindFirst(ClaimTypes.NameIdentifier).Value;
             HttpContextBase httpContextBase = HttpContext.Current.GetOwinContext().Environment["System.Web.HttpContextBase"] as HttpContextBase;
             SessionTokenCache tokenCache = new SessionTokenCache(signedInUserID, httpContextBase);
-           // log.Info("获取缓存："+tokenCache.Count+",cacheID;"+tokenCache.UserObjectId);
+      
             string tenantID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
             AuthenticationContext authContext = new AuthenticationContext( string.Format((is21v ? Config.O365Authority21VNoCommon: Config.O365AuthorityNoCommon),tenantID) , tokenCache);
             ClientCredential clientCredential = new ClientCredential(is21v ? Config.O365ClientId21V: Config.O365ClientId,
@@ -178,8 +178,7 @@ namespace GraphAPIDemo.App_Start
             {
                 HttpContext.Current.Request.GetOwinContext().Authentication.Challenge(
                     new AuthenticationProperties() { RedirectUri = is21v ? Config.O365RedirectUri21V:Config.O365RedirectUri},
-                    OpenIdConnectAuthenticationDefaults.AuthenticationType);
-               // log.Error("获取刷新Token失败"+ex.Message,ex);
+                    OpenIdConnectAuthenticationDefaults.AuthenticationType); 
                 throw new Exception($" {ex.Message}");
             }
         }
