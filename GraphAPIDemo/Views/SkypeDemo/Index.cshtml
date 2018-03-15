@@ -1,0 +1,186 @@
+﻿
+@{
+
+    Layout = null;
+}
+<link href="~/Content/Styles.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="https://swx.cdn.skype.com/shared/v/1.2.30/SkypeBootstrap.min.js"></script>
+
+<body>
+
+    <div id="login">
+        正在登录中....
+    </div>
+
+    <div>
+        <div>
+            <input type="text" placeholder="someone@example.com" text="" id="txt-query" />
+            <button id="btn-search" 　>查询</button>
+        </div>
+        <div id="status"></div>
+        <div id="results" 　></div>
+    </div>
+    <div>
+        <input id="title" value="Jason　测试会议" type="text" 　 />
+        <input id="date" value="2018-03-19 15:30" type="datetime" 　 />
+        <button id="meeting" 　>创建一个会议</button>
+        <div id="meetinglist" 　></div>
+    </div>
+
+</body>
+<script defer="defer" type="text/javascript">
+    var client;
+    var clientId = '2f9f07a8-35a2-4a3d-9dcc-e053398bd231';
+    var replyUrl = 'https://localhost:44342/SkypeDemo/Index';
+    var hasToken = /^#access_token=/.test(location.hash);
+    var hasError = /^#error=/.test(location.hash);
+    if (!hasToken && !hasError) {
+        location.assign('https://login.microsoftonline.com/common/oauth2/authorize?response_type=token' +
+            '&client_id=' + clientId +
+            '&redirect_uri=' + replyUrl +
+            '&resource=https://webdir.online.lync.com');
+    }
+    if (hasError) {
+        alert("认证报错")
+    }
+    function guid() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0,
+                v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+    function delCookie(name) {
+        var exp = new Date();
+        exp.setTime(exp.getTime() - 1);
+        var cval = getCookie(name);
+        if (cval != null)
+            document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+    }
+    $(document).ready(function () {
+        if (hasToken) {
+            Skype.initialize({
+                apiKey: 'a42fcebd-5b43-4b89-a065-74450fb91255',
+                correlationIds: {
+                    sessionId: guid(),
+                }
+            }, function (api) {
+                client = new api.application();
+                client.signInManager.signIn({
+                    "client_id": clientId, // GUID obtained from Azure app registration.
+                    "origins": ["https://webdir.online.lync.com/autodiscover/autodiscoverservice.svc/root"],
+                    "cors": true,
+                    "redirect_uri": replyUrl,
+                    "version": 'demo/1.0.0.0'
+                }).then(function () {
+                    //alert("Login Success")
+                    SkypeLogin = true;
+                    $("#login").text("登录成功");
+                }, function (err) {
+                    console.log("登录失败 重新尝试")
+                });
+            }, function (err) {
+                console.log('some error occurred: ' + err);
+            });
+        }
+
+        $("#btn-search").click(function () {
+            if (client.signInManager.state() != "SignedIn") {
+                console.log("Skype not  Signed In");
+                return;
+            }
+            var personSearchQuery = client.personsAndGroupsManager.createPersonSearchQuery();
+            personSearchQuery.text($("#txt-query").val());
+            personSearchQuery.limit(10);
+            personSearchQuery.getMore().then(function (results) {
+                $('#results').empty();
+                results.forEach(function (r) {
+                    var detail = $("<div>").addClass("detail")
+                        .append($("<p>").text("displayName:" + r.result.displayName()))
+                        .append($("<p>").text("title:" + r.result.title()))
+                        .append($("<p>").text("mobilePhone:" + r.result.mobilePhone()))
+                        .append($("<p>").text("department:" + r.result.department()))
+                        .append($("<p>").text("workPhone:" + r.result.workPhone()))
+                    var id = guid();
+                    var status = $("<div id='" + id + "'>")
+                        .append($("<img>").attr("src", "/images/ajax-loader.gif"));
+                    var tag = $("<div style='border:1px solid red;'>")
+                        .append(detail)
+                        .append(status);
+                    $('#results').append(tag);
+                    r.result.status.get().then(function (status) {
+                        $("#" + id).text(status);
+                    });
+                });
+            });
+        });
+        $("#meeting").click(function () {
+            if (client.signInManager.state() != "SignedIn") {
+                console.log("Skype not  Signed In");
+                return;
+            }
+            var onlineMeetingUri = "";
+            var meeting = client.conversationsManager.createMeeting();
+            meeting.accessLevel("Everyone")
+                .subject($("#title").val())
+                .expirationTime($("#date").val())
+                .onlineMeetingUri.get().then(function (uri) {
+                    var tag = $("<div style='border:1px solid red;'>")
+                        .append($("<p>").text("subject:" + $("#title").val()))
+                        .append($("<a>").text("参与会议").attr("target", "_blank").attr("href", meeting.joinUrl()));
+                    $('#meetinglist').append(tag);
+                }, function (error) {
+                    console.log(error)
+                });
+        });
+    });
+
+    //function sendMail() {
+    //    var call = $.ajax({
+    //        url: "https://graph.microsoft.com/v1.0/me/events",
+    //        type: "Post",
+    //        dataType: "json",
+    //        contentType: "application/json",
+    //        headers: {
+    //            Accept: "application/json;odata.metadata=minimal;odata.streaming=true",
+    //            'Authorization': "Bearer " + getCookie("access_token"),
+    //        },
+    //        data: JSON.stringify({
+    //            "subject": $("#title").val(),
+    //            "body": {
+    //                "contentType": "HTML",
+    //                "content": "Does late morning work for you? " + onlineMeetingUri
+    //            },
+    //            "onlineMeetingUrl": onlineMeetingUri,
+    //            "start": {
+    //                "dateTime": $("#start").val(),
+    //                "timeZone": "Asia/Shanghai"
+    //            },
+    //            "end": {
+    //                "dateTime": $("#end").val(),
+    //                "timeZone": "Asia/Shanghai"
+    //            },
+    //            "location": {
+    //                "displayName": "上海"
+    //            },
+    //            "attendees": [{
+    //                "emailAddress": {
+    //                    "address": $("#user").val(),
+    //                },
+    //                "type": "required"
+    //            }]
+    //        })
+    //    });
+    //    call.done(function (data, textStatus, jqXHR) {
+    //        //GetOutlookEvents(getCookie("access_token"));
+    //        debugger;
+    //    });
+    //    call.fail(function (jqXHR, textStatus, errorThrown) {
+    //        console.log("Error retrieving events: " + jqXHR.responseText);
+    //    });
+    //}
+
+
+
+</script>

@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "GrantPermissions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<center>
+    <h2>Connect your directory</h2>
+    <p>
+        In order to begin install, an administrator from your company needs to approve access to the user list.
+        If you are an admin, please click below to approve the YeeOffice for SharePoint Online Unattended app.
+    </p>
+    <hr />
+    @{
+        if (System.Security.Claims.ClaimsPrincipal.Current.FindFirst("iss").Value.IndexOf("china") >= 0)
+        {
+            <p><a href="/SPOnline/RequestPermissions?type=2" class="btn btn-primary btn-lg">Grant Permissions for Office 365 China &raquo;</a></p>
+        }
+        else
+        {
+            <p><a href="/SPOnline/RequestPermissions?Type=1" class="btn btn-primary btn-lg">Grant Permissions for Office 365 &raquo;</a></p>
+        }
+    }
+  
+   
+</center>
+

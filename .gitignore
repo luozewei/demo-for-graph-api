@@ -3,3 +3,6 @@
 ################################################################################
 
 /GraphAPIDemo/obj
+/GraphAPIDemo/bin
+/.vs/demo-for-graph-api/v15
+/.vs/GraphAPIDemo/v15/Server/sqlite3

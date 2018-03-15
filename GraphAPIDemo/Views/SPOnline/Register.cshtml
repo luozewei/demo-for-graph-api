@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "YeeOffice";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    var _currentSetup;
+</script>
+@Styles.Render("~/Content/register")
+<div class="ak-login-con clearfix col-md-4 text-center" style=" margin: 50px auto; float: none; padding: 0;">
+    <div class="table-wrapper">
+        <div class="table-row">
+            <div class="table-cell">
+                <div class="login i-block">
+                    <div class="content-box ak-zlogin-formblock">
+                        <div class="text-center">
+                            <h2  class="ak-nameh2">易企办企业SharePointOnline注册</h2>
+                        </div>
+                        <!--注册验证 -->
+                        <div class="ak-zlogin-block validationEngineContainer" id="PhoneNo_form">
+                            <div class="ak-formrow clearfix">
+                              
+                                <div class="formline clearfix">
+                                    <span   class="text">站点集地址</span>
+                                    <input id="siteURl" class="form-control ak-input-login validate[required]"
+                                           type="email" placeholder="SharePoint Online 站点集URL"  
+                                           data-errormessage="* SharePoint Online 站点集URL"  
+                                           data-prompt-target="divsiteURl"
+                                           data-prompt-position="inline" 
+                                           />
+                                </div>
+                                <div id="divsiteURl" class="errorCode"></div> 
+                                </div>
+                                 
+                            <div class="row m-tb-30" style="margin-top:10px">
+                                <div class="col-md-12">
+                                    <button type="button"  id="NextVerification" class="ak-zlogin-btnblue">检查安装</button>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+ <script>
+    $(function () {
+        $("#NextVerification").click(function () {
+            $.ajax({
+                type: 'get',
+                url: "/SPOnline/CheckUrl?siteUrl=" + encodeURIComponent($("#siteURl").val()), 
+                success: function (data, status) {
+                    alert(data.Data);
+                },
+                dataType: "json"
+            });
+        });
+    }); 
+</script>
