@@ -16,9 +16,14 @@ https://localhost:44342/SkypeDemo/Index  页面为 Skype API 里面包含  获�
 关于Skype 需要注意的是 需要开启 app 的开启隐式授权，[参考](https://docs.azure.cn/zh-cn/active-directory/develop/active-directory-dev-understanding-oauth2-implicit-grant)
 
 ### 证书凭据的无人值守
-如果不会生成创建以及生成对应的JSON，请参考里面的ps文件，里面的文件是我拿一个国外DD的代码修改的\n
-这里的Demo不会直接是一个无人值守，只i会告诉你怎么去获取无人值守的Token。以及Token的使用\n
-[证书凭据参考](https://docs.microsoft.com/zh-cn/azure/active-directory/develop/active-directory-certificate-credentials)\n
-第一 向管理员申请权限\n
-第二 获取Token\n
-后面大家脑补，有Token 还不会掉API?\n
+如果不会生成创建以及生成对应的JSON，请参考里面的ps文件，里面的文件是我拿一个国外DD的代码修改的
+
+这里的Demo不会直接是一个无人值守，只i会告诉你怎么去获取无人值守的Token。以及Token的使用
+
+[证书凭据参考](https://docs.microsoft.com/zh-cn/azure/active-directory/develop/active-directory-certificate-credentials)
+
+第一 向管理员申请权限
+
+第二 获取Token
+
+后面大家脑补，有Token 还不会掉API?
