@@ -266,7 +266,6 @@
     <Content Include="Views\SPOnline.cshtml" />
     <Content Include="Views\SPOnline\GrantPermissions.cshtml" />
     <Content Include="Views\SPOnline\Index.cshtml" />
-    <Content Include="Views\SPOnline\Install.cshtml" />
     <Content Include="Views\SPOnline\Register.cshtml" />
     <Content Include="Views\SkypeDemo\Index.cshtml" />
   </ItemGroup>
